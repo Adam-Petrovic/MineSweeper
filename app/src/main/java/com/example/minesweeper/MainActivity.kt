@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         val recyclerView : RecyclerView = findViewById(R.id.recycler_view)
 
-        recyclerView.adapter = CellAdapter(this, board)
+        recyclerView.adapter = CellAdapter(board)
         recyclerView.layoutManager = GridLayoutManager(this, boardWidth)
         recyclerView.isNestedScrollingEnabled = false
 
