@@ -75,12 +75,47 @@ class GameBoard(
         if (cell.isFlagged) {
             cell.isFlagged = false
         } else {
-            cell.isRevealed = true
+
+            revealSurroundingZeros(row = row, column = column)
+
             if(cell.hasBomb) {
                 println("hello")
             }
         }
     }
+
+    private fun revealSurroundingZeros(row: Int, column: Int)  {
+
+        if (row < 0 || row > board.lastIndex || column < 0 || column > board[0].lastIndex) {
+            return
+        }
+
+        val cell = board[row][column]
+
+        if (cell.isRevealed){
+            return
+        }
+
+        cell.isRevealed = true
+
+        if (cell.minesInArea != 0 || cell.hasBomb) {
+            return
+        }
+        revealSurroundingZeros(row = row - 1, column = column - 1)
+        revealSurroundingZeros(row = row - 1, column = column)
+        revealSurroundingZeros(row = row - 1, column = column + 1)
+        revealSurroundingZeros(row = row,     column = column - 1)
+        revealSurroundingZeros(row = row,     column = column + 1)
+        revealSurroundingZeros(row = row + 1, column = column - 1)
+        revealSurroundingZeros(row = row + 1, column = column)
+        revealSurroundingZeros(row = row + 1, column = column + 1)
+
+    }
+
+
+
+
+
 
     fun placeFlagAt(position: Int) {
         val row = position / board[0].size
