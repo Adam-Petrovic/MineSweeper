@@ -12,7 +12,12 @@ import com.example.minesweeper.domain.GameBoard
 @Suppress("IMPLICIT_CAST_TO_ANY")
 class CellAdapter(
     private val gameBoard: GameBoard,
+    private val gameEventsObserver: GameEventsObserver,
 ) : RecyclerView.Adapter<CellAdapter.ItemViewHolder>() {
+
+    interface GameEventsObserver {
+        fun onBombRevealed()
+    }
 
     class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val cell : ImageButton = view.findViewById(R.id.cellButton)
@@ -33,7 +38,6 @@ class CellAdapter(
 
         holder.cell.setOnLongClickListener {
             cellOnLongClick(position)
-
         }
         holder.cell.setOnClickListener {
             cellOnClick(position)
@@ -74,8 +78,11 @@ class CellAdapter(
         return true
     }
     private fun cellOnClick(position: Int): Boolean {
-        gameBoard.revealCellAt(position)
+        val result = gameBoard.revealCellAt(position)
         notifyDataSetChanged()
+        if (result == GameBoard.RevealCellResult.Explosion) {
+            gameEventsObserver.onBombRevealed()
+        }
         return true
     }
 }

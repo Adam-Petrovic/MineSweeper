@@ -1,7 +1,5 @@
 package com.example.minesweeper.domain
 
-import android.util.Log
-
 class GameBoard(
     val width : Int,
     val height : Int,
@@ -15,7 +13,55 @@ class GameBoard(
         setMineCounts()
     }
 
+    enum class RevealCellResult {
+        Ok, Explosion
+    }
 
+    fun cellAt(position: Int): BoardCell {
+        val row = position / board[0].size
+        val column = position %  board[0].size
+
+        return board[row][column]
+    }
+
+    data class CellPosition(
+        val row: Int,
+        val column: Int,
+    )
+
+    private fun Int.toCellPosition(): CellPosition
+        = CellPosition(row = this / board[0].size, column = this %  board[0].size)
+
+    private fun CellPosition.toCell(): BoardCell
+        = board[row][column]
+
+    private fun Int.toCell(): BoardCell
+        = this.toCellPosition().toCell()
+
+    fun revealCellAt(position: Int): RevealCellResult {
+        val cellPosition = position.toCellPosition()
+        val cell = position.toCell()
+
+        if (cell.isFlagged) {
+            cell.isFlagged = false
+        } else {
+            revealSurroundingZeros(cellPosition)
+            if(cell.hasBomb) {
+                return RevealCellResult.Explosion
+            }
+        }
+        return RevealCellResult.Ok
+    }
+
+    fun placeFlagAt(position: Int) {
+        val cell = position.toCell()
+        if (cell.isRevealed) {
+            return
+        }
+        cell.isFlagged = !cell.isFlagged
+    }
+
+    fun cellCount(): Int = board.size * board[0].size
 
     private fun setMineCountsForCellNeighbours(row: Int, column: Int) {
         val cell = board[row][column]
@@ -33,7 +79,7 @@ class GameBoard(
     }
 
     private fun incrementBombCountForCellAt(row: Int, column: Int) {
-        if (row < 0 || row > board.lastIndex || column < 0 || column > board[0].lastIndex) {
+        if (!isBoardCell(row = row, column = column)) {
             return
         }
         ++board[row][column].minesInArea
@@ -60,37 +106,13 @@ class GameBoard(
         return board
     }
 
-    fun cellAt(position: Int): BoardCell {
-        val row = position / board[0].size
-        val column = position %  board[0].size
 
-        return board[row][column]
-    }
-    fun revealCellAt(position: Int) {
-        val row = position / board[0].size
-        val column = position %  board[0].size
-
-        val cell = board[row][column]
-
-        if (cell.isFlagged) {
-            cell.isFlagged = false
-        } else {
-
-            revealSurroundingZeros(row = row, column = column)
-
-            if(cell.hasBomb) {
-                println("hello")
-            }
-        }
-    }
-
-    private fun revealSurroundingZeros(row: Int, column: Int)  {
-
-        if (row < 0 || row > board.lastIndex || column < 0 || column > board[0].lastIndex) {
+    private fun revealSurroundingZeros(cellPosition: CellPosition)  {
+        if (!cellPosition.isBoardCell()) {
             return
         }
 
-        val cell = board[row][column]
+        val cell = cellPosition.toCell()
 
         if (cell.isRevealed){
             return
@@ -101,59 +123,51 @@ class GameBoard(
         if (cell.minesInArea != 0 || cell.hasBomb) {
             return
         }
-        revealSurroundingZeros(row = row - 1, column = column - 1)
-        revealSurroundingZeros(row = row - 1, column = column)
-        revealSurroundingZeros(row = row - 1, column = column + 1)
-        revealSurroundingZeros(row = row,     column = column - 1)
-        revealSurroundingZeros(row = row,     column = column + 1)
-        revealSurroundingZeros(row = row + 1, column = column - 1)
-        revealSurroundingZeros(row = row + 1, column = column)
-        revealSurroundingZeros(row = row + 1, column = column + 1)
 
+        revealSurroundingZeros(CellPosition(row = cellPosition.row - 1, column = cellPosition.column - 1))
+        revealSurroundingZeros(cellPosition.copy(row = cellPosition.row - 1))
+        revealSurroundingZeros(cellPosition.copy(row = cellPosition.row - 1, column = cellPosition.column + 1))
+        revealSurroundingZeros(cellPosition.copy(column = cellPosition.column - 1))
+        revealSurroundingZeros(cellPosition.copy(column = cellPosition.column + 1))
+        revealSurroundingZeros(CellPosition(row = cellPosition.row + 1, column = cellPosition.column - 1))
+        revealSurroundingZeros(cellPosition.copy(row = cellPosition.row + 1))
+        revealSurroundingZeros(CellPosition(row = cellPosition.row + 1, column = cellPosition.column + 1))
+
+
+
+//        revealSurroundingZeros(row = row - 1, column = column - 1)
+//        revealSurroundingZeros(row = row - 1, column = column)
+//        revealSurroundingZeros(row = row - 1, column = column + 1)
+//        revealSurroundingZeros(row = row,     column = column - 1)
+//        revealSurroundingZeros(row = row,     column = column + 1)
+//        revealSurroundingZeros(row = row + 1, column = column - 1)
+//        revealSurroundingZeros(row = row + 1, column = column)
+//        revealSurroundingZeros(row = row + 1, column = column + 1)
     }
 
+    private fun isBoardCell(row: Int, column: Int)
+        = row in 0..board.lastIndex && column in 0..board[0].lastIndex
 
-
-
-
-
-    fun placeFlagAt(position: Int) {
-        val row = position / board[0].size
-        val column = position %  board[0].size
-        val cell = board[row][column]
-        if (cell.isRevealed) {
-            return
-        }
-        cell.isFlagged = !cell.isFlagged
-    }
-
-    fun cellCount(): Int = board.size * board[0].size
+    private fun CellPosition.isBoardCell()
+            = isBoardCell(row = row, column = column)
 }
 
-    data class MinePosition(val row: Int, val column: Int)
-    class Mines(width: Int, height: Int, numOfMines: Int) {
-        private val mines: List<MinePosition>
 
-        init {
-            val tempMines = mutableListOf<MinePosition>()
-            for(i in 1..numOfMines) {
-                val mineX = (0 until width).random()
-                val mineY = (0 until height).random()
-                tempMines.add(MinePosition(row = mineY, column = mineX))
-            }
-            mines = tempMines.sortedWith(compareBy(MinePosition::row, MinePosition::column))
-            dumpMines()
+data class MinePosition(val row: Int, val column: Int)
+
+class Mines(width: Int, height: Int, numOfMines: Int) {
+    private val mines: List<MinePosition>
+
+    init {
+        val tempMines = mutableListOf<MinePosition>()
+        for(i in 1..numOfMines) {
+            val mineX = (0 until width).random()
+            val mineY = (0 until height).random()
+            tempMines.add(MinePosition(row = mineY, column = mineX))
         }
+        mines = tempMines.sortedWith(compareBy(MinePosition::row, MinePosition::column))
+    }
 
-        fun hasMineAt(row: Int, column: Int): Boolean
-                = mines.find { it.row == row && it.column == column } != null
-
-        private fun dumpMines() {
-            Log.v("GameBoard", "dumpMines(): -----------------------------")
-            mines.forEachIndexed { index, minePosition ->
-                Log.v("GameBoard", "dumpMines(): [$index]: row[${minePosition.row}, column[${minePosition.column}]")
-            }
-            Log.v("GameBoard", "dumpMines(): -----------------------------")
-
-        }
+    fun hasMineAt(row: Int, column: Int): Boolean
+            = mines.find { it.row == row && it.column == column } != null
 }
