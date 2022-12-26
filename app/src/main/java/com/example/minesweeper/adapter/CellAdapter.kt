@@ -55,6 +55,8 @@ class CellAdapter(
                     4 -> R.drawable.four
                     5 -> R.drawable.five
                     6 -> R.drawable.six
+                    7 -> R.drawable.seven
+                    8 -> R.drawable.eight
                     else -> cellBackground
                 }
             }
