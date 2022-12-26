@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MineSweeper</string>
+    <string name="affirmation1">I</string>
+    <string name="affirmation2">I</string>
+    <string name="affirmation3">E</string>
+    <string name="affirmation4">E</string>
+    <string name="affirmation5">E</string>
+    <string name="affirmation6">E</string>
+</resources>
