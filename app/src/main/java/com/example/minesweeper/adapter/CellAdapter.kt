@@ -4,16 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
 import androidx.recyclerview.widget.RecyclerView
-import com.example.minesweeper.Board
 import com.example.minesweeper.MainActivity
 import com.example.minesweeper.R
-import com.example.minesweeper.data.Datasource
 import com.example.minesweeper.domain.GameBoard
-import com.example.minesweeper.model.Tile
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 class CellAdapter(
@@ -61,23 +55,22 @@ class CellAdapter(
         holder.cell.setImageResource(cellImage)
 
         holder.cell.setOnLongClickListener {
-            cellOnLongClick(it, position)
+            cellOnLongClick(position)
 
         }
         holder.cell.setOnClickListener {
-            cellOnClick(it, position)
+            cellOnClick(position)
         }
     }
 
     override fun getItemCount() = gameBoard.cellCount()
 
-
-    private fun cellOnLongClick(view: View, position: Int): Boolean {
+    private fun cellOnLongClick(position: Int): Boolean {
         gameBoard.placeFlagAt(position)
         notifyDataSetChanged()
         return true
     }
-    private fun cellOnClick(view: View, position: Int): Boolean {
+    private fun cellOnClick(position: Int): Boolean {
         gameBoard.revealCellAt(position)
         notifyDataSetChanged()
         return true

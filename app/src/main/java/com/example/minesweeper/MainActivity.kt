@@ -5,9 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.minesweeper.adapter.CellAdapter
-import com.example.minesweeper.adapter.ItemAdapter
-import com.example.minesweeper.data.CellDatasource
-import com.example.minesweeper.data.Datasource
 import com.example.minesweeper.domain.Game
 
 class MainActivity : AppCompatActivity() {
