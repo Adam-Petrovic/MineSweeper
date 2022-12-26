@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="2dp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/labelsGuide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/valuesGuide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.6"/>
+
+        <TextView
+            android:id="@+id/labelElapsedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/labelsGuide"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
+            android:text="Elapsed Time:"/>
+
+        <TextView
+            android:id="@+id/elapsedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/valuesGuide"
+            app:layout_constraintTop_toTopOf="@id/labelElapsedTime"
+            app:layout_constraintBottom_toBottomOf="@id/labelElapsedTime"
+            android:text="20:00"/>
+
+        <TextView
+            android:id="@+id/labelCorrectFlagCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/labelsGuide"
+            app:layout_constraintTop_toBottomOf="@id/labelElapsedTime"
+            android:layout_marginTop="20dp"
+            android:text="Flags Correctly Placed:"/>
+
+        <TextView
+            android:id="@+id/correctFlagCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/valuesGuide"
+            app:layout_constraintTop_toTopOf="@id/labelCorrectFlagCount"
+            app:layout_constraintBottom_toBottomOf="@id/labelCorrectFlagCount"
+            android:text="15"/>
+
+
+        <TextView
+            android:id="@+id/labelMinesRemaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/labelsGuide"
+            app:layout_constraintTop_toBottomOf="@id/labelCorrectFlagCount"
+            android:layout_marginTop="20dp"
+            android:text="Mines Remaining:"/>
+
+        <TextView
+            android:id="@+id/minesRemaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/valuesGuide"
+            app:layout_constraintTop_toTopOf="@id/labelMinesRemaining"
+            app:layout_constraintBottom_toBottomOf="@id/labelMinesRemaining"
+            android:text="10"/>
+
+        <Button
+            android:id="@+id/buttonNewGame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelMinesRemaining"
+            android:layout_marginTop="40dp"
+            android:text="New Game?"
+            />
+
+        <Button
+            android:id="@+id/buttonSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/buttonNewGame"
+            android:layout_marginTop="20dp"
+            android:text="SETTINGS"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
